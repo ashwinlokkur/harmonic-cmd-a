@@ -4,10 +4,13 @@ from fastapi.concurrency import asynccontextmanager
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from starlette.middleware.cors import CORSMiddleware
+import logging
 
 from backend.db import database
-from backend.routes import collections, companies
+from backend.routes import collections, companies, transfers
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -91,8 +94,10 @@ EXECUTE FUNCTION throttle_updates();
     db.commit()
 
 
+# Include routers
 app.include_router(companies.router)
 app.include_router(collections.router)
+app.include_router(transfers.router)
 
 app.add_middleware(
     CORSMiddleware,

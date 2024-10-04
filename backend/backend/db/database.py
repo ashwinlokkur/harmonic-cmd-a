@@ -13,6 +13,7 @@ from sqlalchemy import (
     UniqueConstraint,
     create_engine,
     func,
+    Index
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
@@ -64,6 +65,8 @@ class CompanyCollectionAssociation(Base):
 
     __table_args__ = (
         UniqueConstraint('company_id', 'collection_id', name='uq_company_collection'),
+        Index('idx_company_id', 'company_id'),
+        Index('idx_collection_id', 'collection_id'),
     )
     
     created_at: Union[datetime, Column[datetime]] = Column(

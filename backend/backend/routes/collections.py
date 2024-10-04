@@ -6,24 +6,16 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from backend.db import database
-from backend.routes.companies import (
-    CompanyBatchOutput,
-    fetch_companies_with_liked,
+from backend.routes.companies import fetch_companies_with_liked
+from backend.schemas import (
+    CompanyCollectionOutput, 
+    CompanyCollectionMetadata
 )
 
 router = APIRouter(
     prefix="/collections",
     tags=["collections"],
 )
-
-
-class CompanyCollectionMetadata(BaseModel):
-    id: uuid.UUID
-    collection_name: str
-
-
-class CompanyCollectionOutput(CompanyBatchOutput, CompanyCollectionMetadata):
-    pass
 
 
 @router.get("", response_model=list[CompanyCollectionMetadata])

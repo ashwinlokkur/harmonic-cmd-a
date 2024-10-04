@@ -3,22 +3,12 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from backend.db import database
+from schemas import CompanyOutput, CompanyBatchOutput
 
 router = APIRouter(
     prefix="/companies",
     tags=["companies"],
 )
-
-
-class CompanyOutput(BaseModel):
-    id: int
-    company_name: str
-    liked: bool
-
-
-class CompanyBatchOutput(BaseModel):
-    companies: list[CompanyOutput]
-    total: int
 
 
 def fetch_companies_with_liked(
