@@ -1,24 +1,36 @@
 import { useEffect, useState } from 'react';
 
-
-
-const useApi = <T>(apiFunction: () => Promise<T>) => {
-    const [data, setData] = useState<T>();
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+function useApi<T>(fetchFunction: () => Promise<T>) {
+    const [data, setData] = useState<T | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<any>(null);
 
     useEffect(() => {
+        let isMounted = true;
         setLoading(true);
-        apiFunction().then((response) => {
-            setData(response);
-        }).catch((error) => {
-            setError(error.message);
-        }).finally(() => {
-            setLoading(false);
-        });
-    }, []);
+        fetchFunction()
+            .then((response) => {
+                if (isMounted) {
+                    setData(response);
+                }
+            })
+            .catch((err) => {
+                if (isMounted) {
+                    setError(err);
+                }
+            })
+            .finally(() => {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [fetchFunction]);
 
     return { data, loading, error };
-};
+}
 
 export default useApi;
