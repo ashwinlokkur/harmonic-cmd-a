@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from backend.db import database
-from schemas import CompanyOutput, CompanyBatchOutput
+from backend.schemas import CompanyOutput, CompanyBatchOutput
 
 router = APIRouter(
     prefix="/companies",

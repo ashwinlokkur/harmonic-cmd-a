@@ -7,7 +7,7 @@ from starlette.middleware.cors import CORSMiddleware
 import logging
 
 from backend.db import database
-from backend.routes import collections, companies, transfers
+from backend.routes import collections, companies, transfers, operations
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -58,6 +58,19 @@ def seed_database(db: Session):
     db.bulk_save_objects(associations)
     db.commit()
 
+    my_list_2 = database.CompanyCollection(collection_name="My List 2")
+    db.add(my_list_2)
+    db.commit()
+
+    associations = [
+        database.CompanyCollectionAssociation(
+            company_id=company.id, collection_id=my_list_2.id
+        )
+        for company in db.query(database.Company).limit(1000).all()
+    ]
+    db.bulk_save_objects(associations)
+    db.commit()
+
     liked_companies = database.CompanyCollection(collection_name="Liked Companies")
     db.add(liked_companies)
     db.commit()
@@ -98,6 +111,7 @@ EXECUTE FUNCTION throttle_updates();
 app.include_router(companies.router)
 app.include_router(collections.router)
 app.include_router(transfers.router)
+app.include_router(operations.router)
 
 app.add_middleware(
     CORSMiddleware,

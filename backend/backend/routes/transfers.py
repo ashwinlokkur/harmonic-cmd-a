@@ -24,7 +24,7 @@ def transfer_companies(
 ):
     operation_id = str(uuid.uuid4())
     # Store initial operation status in Redis
-    redis_client.set_operation_status(operation_id, {"status": "in_progress", "detail": "Transfer started."})
+    redis_client.set_operation_status(operation_id, {"status": "in_progress", "detail": "Transfer in progress."})
     logger.info(f"Operation {operation_id} initiated: Transfer from {transfer_request.source_collection_id} to {transfer_request.target_collection_id}")
 
     # Add the background task to process the transfer
@@ -120,13 +120,13 @@ def process_transfer(operation_id: str, transfer_request: TransferRequest, db: S
         logger.error(f"Operation {operation_id} failed with exception: {e}")
 
 
-@router.get("/{operation_id}", response_model=OperationStatusResponse)
-def get_operation_status(operation_id: str):
-    status = redis_client.get_operation_status(operation_id)
-    if not status:
-        raise HTTPException(status_code=404, detail="Operation ID not found.")
-    return OperationStatusResponse(
-        operation_id=operation_id,
-        status=status["status"],
-        detail=status.get("detail"),
-    )
+# @router.get("/{operation_id}", response_model=OperationStatusResponse)
+# def get_operation_status(operation_id: str):
+#     status = redis_client.get_operation_status(operation_id)
+#     if not status:
+#         raise HTTPException(status_code=404, detail="Operation ID not found.")
+#     return OperationStatusResponse(
+#         operation_id=operation_id,
+#         status=status["status"],
+#         detail=status.get("detail"),
+#     )

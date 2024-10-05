@@ -30,6 +30,9 @@ class CompanyCollectionOutput(BaseModel):
     class Config:
         orm_mode = True
 
+class BulkDeleteRequest(BaseModel):
+    company_ids: Optional[List[int]] = []
+
 class TransferRequest(BaseModel):
     source_collection_id: uuid.UUID
     target_collection_id: uuid.UUID
