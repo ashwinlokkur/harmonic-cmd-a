@@ -50,6 +50,11 @@ const CompanyTable: React.FC<CompanyTableProps> = ({ selectedCollectionId }) => 
         setTransferDialogOpen(true);
     };
 
+    const handleSelectAll = async () => {
+        setTransferDialogOpen(true);
+        setSelectionModel([]);
+    };
+
     const handleTransfer = async (targetCollectionId: string) => {
         setTransferDialogOpen(false);
         setLoadingOperation(true);
@@ -97,20 +102,32 @@ const CompanyTable: React.FC<CompanyTableProps> = ({ selectedCollectionId }) => 
 
     return (
         <div style={{ height: 800, width: "100%" }}>
-            <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'flex-start' }}>
                 <div>
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={handleTransferClick}
                   disabled={selectionModel.length === 0 || loadingOperation}
-                  style={{ marginRight: 8 }}
+                  style={{ marginRight: 32 }}
                   >
                         Move Selected ({selectionModel.length})
                     </Button>
                     {loadingOperation && <CircularProgress size={24} style={{ marginLeft: 16 }} />}
                 </div>
                 <div>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleSelectAll}
+                  disabled={loadingOperation}
+                  style={{ marginRight: 16 }}
+                  >
+                        Move All
+                    </Button>
+                    {loadingOperation && <CircularProgress size={24} style={{ marginLeft: 16 }} />}
+                </div>
+                <div style={{ marginLeft: 'auto' }}>
                     <span>Total Companies: {total}</span>
                 </div>
             </div>
